@@ -140,7 +140,7 @@
 </head>
 <body>
     <div class="response" id="lastCommand">
-        <span class="prompt">C:\Users\Usuario&gt;</span> <span id="commandText">Comando exemplo</span>
+        <span class="prompt">C:\Users\Usuario&gt;</span> <span id="use /setname">Comando exemplo</span>
     </div>
     <div class="input-container">
         <span class="prompt">C:\Users\Usuario&gt;</span> <input type="text" id="inputCommand" placeholder="Digite um comando">
@@ -246,28 +246,32 @@
 
         function executeCommand(command) {
             switch (command.toLowerCase()) {
-                case "help":
+                case "/help":
                     printResponse("Comandos disponíveis: help, status, quit, setname, deepweb");
                     break;
-                case "status":
+                case "/status":
                     if (saveLoaded || nameDefined) {
                         printStatus();
                     } else {
                         printResponse("Você precisa carregar um save ou definir um nome antes de verificar o status.");
                     }
                     break;
-                case "quit":
+                case "/quit":
                     printResponse("Saindo do terminal...");
                     break;
-                case "setname":
+                case "/setname":
                     openPopup();
                     break;
-                case "deepweb":
+                case "/deepweb":
                     if (saveLoaded || nameDefined) {
                         openDeepWebPopup();
                     } else {
                         printResponse("Você precisa carregar um save ou definir um nome antes de acessar a deep web.");
-                    }
+                                      }
+                case "/$6377363672727":
+                    function showMoneyButton()
+                    printResponse("botão FUCKOFF desbloqueado"
+                    
                     break;
                 default:
                     printResponse("Comando não reconhecido. Digite 'help' para ver os comandos disponíveis.");
@@ -341,6 +345,7 @@
 
         function showMoneyButton() {
             document.getElementById("moneyButton").style.display = "block";
+            printResponse(" botão FUCKOFF desbloqueado, para desbloalo outras vezes é so dar /$6377363672727")
         }
 
         function earnMoney() {
