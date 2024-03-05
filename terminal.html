@@ -56,18 +56,17 @@
 
         /* Estilo do botão verde */
         #moneyButton {
-            background-color: black;
-            color: black;
+            background: url('fuckoff.png') no-repeat center center;
+            background-size: 50%;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 25px; /* Defina a largura do botão */
-            height: 25px; /* Defina a altura do botão */
+            width: 37.5px; /* Defina a largura do botão */
+            height: 37.5px; /* Defina a altura do botão */
         }
 
         /* Estilos do terminal */
@@ -150,9 +149,9 @@
         <div>
             <div class="status" id="nickname">Nickname: -</div>
             <div class="status" id="cc">CC: -</div>
-            <div class="status" id="money">Money: 10</div>
+            <div class="status" id="money">Money:10</div>
             <!-- Botão para ganhar dinheiro -->
-            <img id="moneyButton" src="fuckoff.png" alt="Money Button" onclick="earnMoney()">
+            <button id="moneyButton" onclick="earnMoney()"></button>
         </div>
     </div>
 
@@ -334,7 +333,7 @@
                 document.getElementById("cc").textContent = dataParts[1];
                 document.getElementById("money").textContent = dataParts[2];
 
-                saveLoaded =true;
+                saveLoaded = true;
             };
 
             reader.readAsText(file);
@@ -344,9 +343,14 @@
             document.getElementById("moneyButton").style.display = "block";
         }
 
+        function earnMoney() {
+            const money = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
+            document.getElementById("money").textContent = `Money: ${money + 1}`;
+        }
+
         function openDeepWebPopup() {
             document.getElementById("overlay").style.display = "block";
-            document.getElementById("deepwebPopup").style.display = "block";
+            document.getElementById("deepwebPopup").style.display ="block";
         }
 
         function closeDeepWebPopup() {
