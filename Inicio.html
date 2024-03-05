@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal CMD Verde</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        /* Estilos do pop-up e overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: lime;
+            padding: 20px;
+            border: 2px solid lime;
+            border-radius: 10px;
+            box-shadow: 0 0 10px lime;
+            z-index: 1000;
+            display: none;
+        }
+        .popup-content {
+            margin-bottom: 20px;
+        }
+        .popup-close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+        }
+        .popup-button {
+            background-color: lime;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .popup-button:hover {
+            background-color: lightgreen;
+        }
+
+        /* Estilo do botão verde */
+        #moneyButton {
+            background-color: lime;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Estilos do terminal */
+        body {
+            background-color: black;
+            color: lime;
+            font-family: 'VT323', monospace;
+            padding: 20px;
+            margin-bottom: 50px;
+        }
+        .prompt {
+            color: green;
+            float: left;
+        }
+        .input-container {
+            margin-top: 10px;
+            clear: both;
+        }
+        input[type="text"] {
+            background-color: black;
+            color: lime;
+            border: none;
+            font-family: 'VT323', monospace;
+            padding: 5px;
+            width: calc(100% - 100px);
+            float: left;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            outline: none;
+        }
+        .response {
+            clear: both;
+            margin-top: 5px;
+        }
+
+        /* Estilos da taskbar */
+        #statusTaskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: black;
+            color: lime;
+            padding: 10px;
+            box-sizing: border-box;
+            border-top: 1px solid lime;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status {
+            margin-right: 20px;
+            flex-grow: 1; /* Adiciona flex-grow para que os status ocupem todo o espaço disponível */
+        }
+        .icon {
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .icon img {
+            width: 48px;
+            height: 48px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="response" id="lastCommand">
+        <span class="prompt">C:\Users\Usuario&gt;</span> <span id="commandText">Comando exemplo</span>
+    </div>
+    <div class="input-container">
+        <span class="prompt">C:\Users\Usuario&gt;</span> <input type="text" id="inputCommand" placeholder="Digite um comando">
+    </div>
+    <div class="input-container">
+        <hr style="width: 100%; margin-top: 10px; margin-bottom: 10px;">
+    </div>
+
+    <!-- Status Taskbar -->
+    <div id="statusTaskbar">
+        <div>
+            <div class="status" id="nickname">Nickname: -</div>
+            <div class="status" id="cc">CC: -</div>
+            <div class="status" id="money">Money: 10</div>
+            <!-- Botão para ganhar dinheiro -->
+            <button id="moneyButton" onclick="earnMoney()">Earn Money</button>
+        </div>
+    </div>
+
+    <!-- Function Taskbar -->
+    <div id="functionTaskbar">
+        <div>
+            <img src="https://drive.google.com/file/d/15fqm6w3yDoRafds8nSV01jODmtxEl1Y_/view?usp=drivesdk" alt="Save" class="icon" onclick="saveGame()">
+            <img src="https://drive.google.com/file/d/16Aurfuzl4jF_k2x9XQEGGiJ3ZQL2Guha/view?usp=drivesdk" alt="Upload" class="icon" onclick="uploadFile()">
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" style="display: none;">
+
+    <!-- Pop-up -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup" style="display: none;">
+        <span class="popup-close" onclick="closePopup()">X</span>
+        <div class="popup-content">
+            <h2>Set Name</h2>
+            <label for="playerName">Enter your name:</label>
+            <input type="text" id="playerName">
+            <button class="popup-button" onclick="setName()">Set Name</button>
+        </div>
+    </div>
+
+    <a id="downloadLink" style="display: none;">Download</a>
+
+    <!-- Pop-up da Deep Web -->
+    <div class="popup" id="deepwebPopup" style="display: none;">
+        <span class="popup-close" onclick="closeDeepWebPopup()">X</span>
+        <div class="popup-content">
+            <h2>Deep Web</h2>
+            <label for="pixCode">Digite o código PIX:</label>
+            <input type="text" id="pixCode">
+            <button class="popup-button" onclick="validatePixCode()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        let saveLoaded = false;
+        let nameDefined = false;
+
+        function setName() {
+            const playerName = document.getElementById("playerName").value;
+            if (playerName) {
+                document.getElementById("nickname").textContent = `Nickname: ${playerName}`;
+                const cc = Math.random().toString(36).substr(2, 8);
+                document.getElementById("cc").textContent = `CC: ${cc}`;
+                printResponse(`Nome definido como ${playerName} e CC gerado:${cc}`);
+                nameDefined = true;
+                closePopup();
+            }
+        }
+
+        function encryptText(text, key) {
+            return CryptoJS.AES.encrypt(text, key).toString();
+        }
+
+        function decryptText(ciphertext, key) {
+            const bytes = CryptoJS.AES.decrypt(ciphertext, key);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+
+        function openPopup() {
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("popup").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("popup").style.display = "none";
+        }
+
+        function writeLastCommand(command) {
+            const responseDiv = document.getElementById("lastCommand");
+            responseDiv.innerHTML = `<span class="prompt">C:\\Users\\Usuario&gt;</span> <span>${command}</span>`;
+        }
+
+        document.getElementById("inputCommand").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const command = this.value;
+                this.value = "";
+                writeLastCommand(command);
+                executeCommand(command);
+            }
+        });
+
+        function executeCommand(command) {
+            switch (command.toLowerCase()) {
+                case "help":
+                    printResponse("Comandos disponíveis: help, status, quit, setname, deepweb");
+                    break;
+                case "status":
+                    if (saveLoaded || nameDefined) {
+                        printStatus();
+                    } else {
+                        printResponse("Você precisa carregar um save ou definir um nome antes de verificar o status.");
+                    }
+                    break;
+                case "quit":
+                    printResponse("Saindo do terminal...");
+                    break;
+                case "setname":
+                    openPopup();
+                    break;
+                case "deepweb":
+                    if (saveLoaded || nameDefined) {
+                        openDeepWebPopup();
+                    } else {
+                        printResponse("Você precisa carregar um save ou definir um nome antes de acessar a deep web.");
+                    }
+                    break;
+                default:
+                    printResponse("Comando não reconhecido. Digite 'help' para ver os comandos disponíveis.");
+            }
+        }
+
+        function printResponse(response) {
+            const responseDiv = document.createElement("div");
+            responseDiv.textContent = response;
+            responseDiv.classList.add("response");
+            document.body.appendChild(responseDiv);
+        }
+
+        function printStatus() {
+            const nickname = document.getElementById("nickname").textContent;
+            const cc = document.getElementById("cc").textContent;
+            const money = document.getElementById("money").textContent;
+            const statusMessage = `${nickname}, ${cc}, ${money}`;
+            printResponse(statusMessage);
+        }
+
+        function saveGame() {
+            if (nameDefined) {
+                const nickname = document.getElementById("nickname").textContent;
+                const cc = document.getElementById("cc").textContent;
+                const money = document.getElementById("money").textContent;
+                const saveData = `${nickname}, ${cc}, ${money}`;
+
+                const encryptedData = encryptText(saveData, "chave_de_criptografia");
+                printResponse("Jogo salvo com sucesso.");
+
+                const blob = new Blob([encryptedData], { type: "text/plain" });
+                const url = URL.createObjectURL(blob);
+
+                const downloadLink = document.getElementById("downloadLink");
+                downloadLink.href = url;
+                downloadLink.download = "save.txt";
+                downloadLink.click();
+            } else {
+                printResponse("Você precisa definir um nome antes de salvar o jogo.");
+            }
+        }
+
+        function uploadFile() {
+            document.getElementById('fileInput').click();
+        }
+
+        document.getElementById("fileInput").addEventListener("change", function() {
+            readUploadedFile(this);
+        });
+
+        function readUploadedFile(inputFile) {
+            const file = inputFile.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const content = event.target.result;
+
+                const decryptedData = decryptText(content, "chave_de_criptografia");
+
+                const dataParts = decryptedData.split(", ");
+                document.getElementById("nickname").textContent = dataParts[0];
+                document.getElementById("cc").textContent = dataParts[1];
+                document.getElementById("money").textContent = dataParts[2];
+
+                saveLoaded = true;
+            };
+
+            reader.readAsText(file);
+        }
+
+        function showMoneyButton() {
+            document.getElementById("moneyButton").style.display = "block";
+        }
+
+        function earnMoney() {
+            const money = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
+            document.getElementById("money").textContent = `Money: ${money + 0.5}`;
+        }
+
+        function openDeepWebPopup() {
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("deepwebPopup").style.display = "block";
+        }
+
+        function closeDeepWebPopup() {
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("deepwebPopup").style.display = "none";
+        }
+
+        function validatePixCode() {
+            const pixCode = document.getElementById("pixCode").value;
+            if (pixCode.length === 20) {
+                const currentMoney = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
+                if (currentMoney >= 10) {
+                    document.getElementById("money").textContent = `Money: ${currentMoney - 10}`;
+                    printResponse("Pix code validado. 10 reais debitados.");
+                    showMoneyButton(); // Exibe o botão de ganhar dinheiro após o débito de 10 reais
+                    closeDeepWebPopup();
+                } else {
+                    printResponse("Você não tem dinheiro suficiente para validar o código PIX.");
+                }
+            } else {
+                printResponse("Código PIX inválido. Certifique-se de inserir um código de 20 caracteres.");
+            }
+        }
+    </script>
+</body>
+</html>
