@@ -57,10 +57,8 @@
         /* Estilo do botão verde */
         #moneyButton {
             background-color: black;
-            background("fuckoff.png");
             color: black;
             border: none;
-            padding: 100px 100px; /* Ajuste o padding para reduzir o tamanho do botão */
             border-radius: 5px;
             cursor: pointer;
             display: none;
@@ -68,10 +66,6 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            /* Substitua "url('caminho_para_o_sprite')" pelo caminho real do sprite */
-            background-image: url('fuckoff.png');
-            background-size: contain;
-            background-repeat: no-repeat;
             width: 25px; /* Defina a largura do botão */
             height: 25px; /* Defina a altura do botão */
         }
@@ -199,17 +193,6 @@
     </div>
 
     <a id="downloadLink" style="display: none;">Download</a>
-
-    <!-- Pop-up da Deep Web -->
-    <div class="popup" id="deepwebPopup" style="display: none;">
-        <span class="popup-close" onclick="closeDeepWebPopup()">X</span>
-        <div class="popup-content">
-            <h2>Deep Web</h2>
-            <label for="pixCode">Digite o código PIX:</label>
-            <input type="text" id="pixCode">
-            <button class="popup-button" onclick="validatePixCode()">Enviar</button>
-        </div>
-    </div>
 
     <script>
         let saveLoaded = false;
@@ -398,6 +381,31 @@
         function openDeepWebPage() {
             window.open('deepweb.html', '_blank');
         }
+
+        // Código para exibir o wallpaper.gif e animá-lo
+        window.onload = function() {
+            const wallpaper = document.createElement("img");
+            wallpaper.src = "wallpaper.gif";
+            wallpaper.style.width = "100%";
+            wallpaper.style.height = "100%";
+            wallpaper.style.position = "fixed";
+            wallpaper.style.top = "0";
+            wallpaper.style.left = "0";
+            wallpaper.style.zIndex = "-1";
+            document.body.appendChild(wallpaper);
+
+            setTimeout(function() {
+                let opacity = 1;
+                const fadeInterval = setInterval(function() {
+                    opacity -= 0.05;
+                    wallpaper.style.opacity = opacity;
+                    if (opacity <= 0) {
+                        clearInterval(fadeInterval);
+                        wallpaper.style.display = "none";
+                    }
+                },50);
+            }, 3500);
+        };
     </script>
 </body>
 </html>
