@@ -152,9 +152,10 @@
             <div class="status" id="cc">CC: -</div>
             <div class="status" id="money">Money: 10</div>
             <!-- Botão para ganhar dinheiro -->
-            <button id="moneyButton" onclick="earnMoney()"></button>
-        </div>
-    </div>
+            function earnMoney() {
+    const money = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
+    document.getElementById("money").textContent = `Money: ${money + 1}`;
+}
 
     <!-- Function Taskbar -->
     <div id="functionTaskbar">
