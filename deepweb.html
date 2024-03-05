@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja DeepWeb</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .product {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .product h2 {
+            margin-top: 0;
+        }
+        .product p {
+            margin-bottom: 0;
+        }
+        .generate-button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .generate-button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Loja DeepWeb</h1>
+            <p>Compre produtos ilegais e exclusivos!</p>
+        </div>
+        
+        <div class="product">
+            <h2>Fuck Off</h2>
+            <p>Um pacote especial para mandar todo mundo se ferrar.</p>
+            <p>Preço: $10</p>
+        </div>
+        
+        <button class="generate-button" onclick="generatePIX()">Gerar PIX</button>
+    </div>
+
+    <script>
+        function generatePIX() {
+            var pix = '';
+            for (var i = 0; i < 20; i++) {
+                pix += Math.floor(Math.random() * 10); // Adiciona um dígito aleatório de 0 a 9 ao código PIX
+            }
+            navigator.clipboard.writeText(pix) // Copia o código PIX para a área de transferência
+                .then(() => alert("Código PIX gerado e copiado: " + pix)) // Exibe o código PIX gerado
+                .catch(err => console.error('Erro ao copiar: ', err)); // Exibe erro, se houver
+        }
+    </script>
+</body>
+</html>
