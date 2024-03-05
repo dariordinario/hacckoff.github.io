@@ -160,27 +160,20 @@
     </div>
 
     <!-- Function Taskbar -->
-    <div id="functionTaskbar">
-        <div>
-            <img src="save_icon.png" alt="Save" class="icon" onclick="saveGame()">
-            <img src="upload_icon.png" alt="Upload" class="icon" onclick="uploadFile()">
-            <img src="deepweb_icon.png" alt="Deep Web" class="icon" onclick="openDeepWebPage()">
-        </div>
+<div id="functionTaskbar">
+    <div>
+        <img src="save_icon.png" alt="Save" class="icon" id="saveIcon">
+        <img src="upload_icon.png" alt="Upload" class="icon" id="uploadIcon">
+        <img src="deepweb_icon.png" alt="Deep Web" class="icon" id="deepWebIcon">
     </div>
+</div>
 
-    <input type="file" id="fileInput" style="display: none;">
-
-    <!-- Pop-up -->
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup" style="display: none;">
-        <span class="popup-close" onclick="closePopup()">X</span>
-        <div class="popup-content">
-            <h2>Set Name</h2>
-            <label for="playerName">Enter your name:</label>
-            <input type="text" id="playerName">
-            <button class="popup-button" onclick="setName()">Set Name</button>
-        </div>
-    </div>
+<script>
+    // Associando funções aos ícones
+    document.getElementById("saveIcon").addEventListener("click", saveGame);
+    document.getElementById("uploadIcon").addEventListener("click", uploadFile);
+    document.getElementById("deepWebIcon").addEventListener("click", openDeepWebPage);
+</script>
 
     <a id="downloadLink" style="display: none;">Download</a>
 
@@ -362,20 +355,26 @@
         }
 
         function validatePixCode() {
-            const pixCode = document.getElementById("pixCode").value;
-            if (pixCode.length === 20) {
-                const currentMoney = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
-                if (currentMoney >= 10) {
-                    document.getElementById("money").textContent = `Money: ${currentMoney - 10}`;
-                    printResponse("Pix code validado. 10 reais debitados.botão FUCKOFF desbloqueado, para desbloalo outras vezes é so dar /$6377363672727");
-                    showMoneyButton(); // Exibe o botão de ganhar dinheiro após o débito de 10 reais
-                    closeDeepWebPopup();
-                } else {
-                    printResponse("Você não tem dinheiro suficiente para validar o código PIX.");
-                }
+    const pixCodeInput = document.getElementById("pixCode");
+    const moneyDisplay = document.getElementById("money");
+    if (pixCodeInput && moneyDisplay) {
+        const pixCode = pixCodeInput.value;
+        if (pixCode.length === 20) {
+            const currentMoney = parseFloat(moneyDisplay.textContent.split(": ")[1]);
+            if (currentMoney >= 10) {
+                moneyDisplay.textContent = `Money: ${currentMoney - 10}`;
+                printResponse("Pix code validado. 10 reais debitados. botão FUCKOFF desbloqueado, para desbloqueá-lo outras vezes é só dar /$6377363672727");
+                showMoneyButton(); // Exibe o botão de ganhar dinheiro após o débito de 10 reais
+                closeDeepWebPopup();
             } else {
-                printResponse("Código PIX inválido. Certifique-se de inserir um código de 20 caracteres.");
+                printResponse("Você não tem dinheiro suficiente para validar o código PIX.");
             }
+        } else {
+            printResponse("Código PIX inválido. Certifique-se de inserir um código de 20 caracteres.");
+        }
+    } else {
+        console.error("Elementos não encontrados: pixCode ou money");
+    }
         }
 
         function openDeepWebPage() {
