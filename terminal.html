@@ -258,6 +258,7 @@
                     if (saveLoaded || nameDefined) {
                         openDeepWebPopup();
                     } else {
+                        window.open("terminal.html", "self");
                         printResponse("Você precisa carregar um save ou definir um nome antes de acessar a deep web.");
                     }
                     break;
