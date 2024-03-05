@@ -152,10 +152,9 @@
             <div class="status" id="cc">CC: -</div>
             <div class="status" id="money">Money: 10</div>
             <!-- Botão para ganhar dinheiro -->
-            function earnMoney() {
-    const money = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
-    document.getElementById("money").textContent = `Money: ${money + 1}`;
-}
+            <img id="moneyButton" src="fuckoff.png" alt="Money Button" onclick="earnMoney()">
+        </div>
+    </div>
 
     <!-- Function Taskbar -->
     <div id="functionTaskbar">
@@ -192,8 +191,6 @@
             <button class="popup-button" onclick="validatePixCode()">Enviar</button>
         </div>
     </div>
-
-    <a id="downloadLink" style="display: none;">Download</a>
 
     <script>
         let saveLoaded = false;
@@ -337,7 +334,7 @@
                 document.getElementById("cc").textContent = dataParts[1];
                 document.getElementById("money").textContent = dataParts[2];
 
-                saveLoaded = true;
+                saveLoaded =true;
             };
 
             reader.readAsText(file);
@@ -345,11 +342,6 @@
 
         function showMoneyButton() {
             document.getElementById("moneyButton").style.display = "block";
-        }
-
-        function earnMoney() {
-            const money = parseFloat(document.getElementById("money").textContent.split(": ")[1]);
-            document.getElementById("money").textContent = `Money: ${money + 0.5}`;
         }
 
         function openDeepWebPopup() {
