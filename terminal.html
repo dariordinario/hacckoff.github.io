@@ -155,8 +155,9 @@
     <!-- Function Taskbar -->
     <div id="functionTaskbar">
         <div>
-            <img src="save_icon.png" alt="Save" class="icon" onclick="saveGame()">
-            <img src="upload_icon.png" alt="Upload" class="icon" onclick="uploadFile()">
+            <img src="https://drive.google.com/file/d/15fqm6w3yDoRafds8nSV01jODmtxEl1Y_/view?usp=drivesdk" alt="Save" class="icon" onclick="saveGame()">
+            <img src="https://drive.google.com/file/d/16Aurfuzl4jF_k2x9XQEGGiJ3ZQL2Guha/view?usp=drivesdk" alt="Upload" class="icon" onclick="uploadFile()">
+            <img src="icone_da_deep_web.png" alt="Deep Web" class="icon" onclick="openDeepWebPage()">
         </div>
     </div>
 
@@ -188,7 +189,7 @@
     </div>
 
     <script>
-        let saveLoaded = false;
+        letsaveLoaded = false;
         let nameDefined = false;
 
         function setName() {
@@ -258,7 +259,6 @@
                     if (saveLoaded || nameDefined) {
                         openDeepWebPopup();
                     } else {
-                        window.open("terminal.html", "self");
                         printResponse("Você precisa carregar um save ou definir um nome antes de acessar a deep web.");
                     }
                     break;
@@ -366,6 +366,10 @@
             } else {
                 printResponse("Código PIX inválido. Certifique-se de inserir um código de 20 caracteres.");
             }
+        }
+
+        function openDeepWebPage() {
+            window.open('deepweb.html', '_blank');
         }
     </script>
 </body>
