@@ -56,10 +56,10 @@
 
         /* Estilo do botão verde */
         #moneyButton {
-            background-color: lime;
+            background("fuckoff.png");
             color: black;
             border: none;
-            padding: 10px 20px;
+            padding: 100px 100px; /* Ajuste o padding para reduzir o tamanho do botão */
             border-radius: 5px;
             cursor: pointer;
             display: none;
@@ -71,6 +71,8 @@
             background-image: url('fuckoff.png');
             background-size: contain;
             background-repeat: no-repeat;
+            width: 25px; /* Defina a largura do botão */
+            height: 25px; /* Defina a altura do botão */
         }
 
         /* Estilos do terminal */
@@ -140,7 +142,7 @@
 </head>
 <body>
     <div class="response" id="lastCommand">
-        <span class="prompt">C:\Users\Usuario&gt;</span> <span id="use /setname">caso não possua um save /setname</span>
+        <span class="prompt">C:\Users\Usuario&gt;</span> <span id="use /setname">Comando exemplo</span>
     </div>
     <div class="input-container">
         <span class="prompt">C:\Users\Usuario&gt;</span> <input type="text" id="inputCommand" placeholder="Digite um comando">
@@ -179,6 +181,19 @@
             <label for="playerName">Enter your name:</label>
             <input type="text" id="playerName">
             <button class="popup-button" onclick="setName()">Set Name</button>
+        </div>
+    </div>
+
+    <a id="downloadLink" style="display: none;">Download</a>
+
+    <!-- Pop-up da Deep Web -->
+    <div class="popup" id="deepwebPopup" style="display: none;">
+        <span class="popup-close" onclick="closeDeepWebPopup()">X</span>
+        <div class="popup-content">
+            <h2>DeepWeb</h2>
+            <label for="pixCode">Digite o código PIX:</label>
+            <input type="text" id="pixCode">
+            <button class="popup-button" onclick="validatePixCode()">Enviar</button>
         </div>
     </div>
 
@@ -372,7 +387,7 @@
                     showMoneyButton(); // Exibe o botão de ganhar dinheiro após o débito de 10 reais
                     closeDeepWebPopup();
                 } else {
-                    printResponse("Você não tem dinheiro suficiente para validar o código PIX.");
+                    printResponse("Você não tem dinheiro suficiente.");
                 }
             } else {
                 printResponse("Código PIX inválido. Certifique-se de inserir um código de 20 caracteres.");
